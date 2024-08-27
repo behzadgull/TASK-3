@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  user-service:
+    image: user-service-image
+    build:
+      context: ./user-service
+    ports:
+      - "8003:8000"
+    networks:
+      - ecommerce-network
+    environment:
+      - DB_HOST=user-db
+      - DB_USER=root
+      - DB_PASSWORD=
+      - DB_NAME=user_db
+
+  product-service:
+    image: product-service-image
+    build:
+      context: ./product-service
+    ports:
+      - "8002:8000"
+    networks:
+      - ecommerce-network
+    environment:
+      - DB_HOST=product-db
+      - DB_USER=root
+      - DB_PASSWORD=
+      - DB_NAME=product_db
+
+  order-service:
+    image: order-service-image
+    build:
+      context: ./order-service
+    ports:
+      - "8001:8000"
+    networks:
+      - ecommerce-network
+    environment:
+      - DB_HOST=order-db
+      - DB_USER=root
+      - DB_PASSWORD=
+      - DB_NAME=order_db
+
+  user-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: user_db
+    networks:
+      - ecommerce-network
+    volumes:
+      - user-db-data:/var/lib/mysql
+
+  product-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: product_db
+    networks:
+      - ecommerce-network
+    volumes:
+      - product-db-data:/var/lib/mysql
+
+  order-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: order_db
+    networks:
+      - ecommerce-network
+    volumes:
+      - order-db-data:/var/lib/mysql
+
+networks:
+  ecommerce-network:
+
+volumes:
+  user-db-data:
+  product-db-data:
+  order-db-data:
